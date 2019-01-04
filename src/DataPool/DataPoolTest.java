@@ -1,18 +1,21 @@
 package DataPool;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DataPoolTest {
     private  static BaseDataPool dataPool = new BaseDataPool();
     private static long start;
     public static void main(String[] args){
-        try {
-            //noDataPoolRun();
-            withDataPoolRun();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        addDataToDB(2000);
+//        try {
+//            //noDataPoolRun();
+//            withDataPoolRun();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     public static void noDataPoolRun() throws Exception{
@@ -54,5 +57,18 @@ public class DataPoolTest {
             }
             System.out.println(System.currentTimeMillis() - start);
         }
+    }
+
+    static void addDataToDB(int count){
+        DataBaseImp dataBaseImp = DataBaseImp.getInstance();
+
+        dataBaseImp.initConnection("Moonshine", "root", "hahahaha");
+
+        String insertQueryFormat = "INSERT INTO KULinks VALUES ('%s', 'unused','%tF')";
+        for(int i = 0; i < count; i ++){
+            System.out.println(String.format(insertQueryFormat, i, new Date()));
+            dataBaseImp.execute(String.format(insertQueryFormat, i, new Date()));
+        }
+        dataBaseImp.close();
     }
 }
